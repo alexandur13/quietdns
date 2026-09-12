@@ -1,0 +1,31 @@
+name: Build release artifacts
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  binaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+          cache: false
+      - run: go mod tidy && go test -race ./...
+      - name: Package standalone binaries
+        shell: bash
+        run: |
+          mkdir -p dist
+          for arch in arm64 amd64; do
+            CGO_ENABLED=0 GOOS=linux GOARCH="$arch" go build -trimpath -ldflags="-s -w -X main.version=${GITHUB_REF_NAME}" -o quietdns .
+            tar -czf "dist/quietdns-linux-$arch.tar.gz" quietdns README.md LICENSE
+          done
+          cd dist
+          sha256sum *.tar.gz > SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quietdns-linux-builds
+          path: dist/

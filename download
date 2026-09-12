@@ -1,0 +1,11 @@
+.git
+.env
+data
+node_modules
+dist
+docs
+tests
+*.tar.gz
+*.zip
+quietdns
+quietdns.exe

@@ -1,0 +1,11 @@
+.env
+data/
+node_modules/
+dist/
+quietdns
+quietdns.exe
+coverage.out
+*.tar.gz
+*.zip
+.DS_Store
+test-results/

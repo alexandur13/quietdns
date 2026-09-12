@@ -1,0 +1,51 @@
+name: Checks
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.x'
+          cache: false
+      - run: go mod tidy
+      - run: go vet ./...
+      - run: go test -race -count=1 -cover ./...
+      - name: Build Linux targets
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -o /tmp/quietdns-arm64 .
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /tmp/quietdns-amd64 .
+      - name: Shell syntax
+        run: bash -n install.sh
+      - name: Container smoke test
+        run: |
+          docker build -t quietdns:test .
+          docker run -d --name quietdns-test quietdns:test
+          sleep 3
+          docker exec quietdns-test /quietdns check
+          docker logs quietdns-test
+  dashboard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --ignore-scripts
+      - run: npm test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
+        env:
+          SCREENSHOT_DIR: test-results
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dashboard-screenshots
+          path: test-results
+          if-no-files-found: ignore

@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="theme-color" content="#f7f8fa"><meta name="description" content="A quieter internet, managed from your own network.">
+ <title>QuietDNS · Your network, at ease</title>
+ <link rel="icon" href="/mark.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css">
+ <script type="module" src="/app.js"></script>
+</head>
+<body>
+ <a class="skip" href="#main">Skip to content</a>
+ <div id="app"><main class="loading" id="main"><img src="/mark.svg" width="44" height="44" alt=""><p>Connecting to QuietDNS…</p></main></div>
+ <div id="toast" role="status" aria-live="polite"></div>
+ <dialog id="rule-dialog" aria-labelledby="rule-title"><form id="rule-form"><div class="dialog-head"><h2 id="rule-title">Add a domain rule</h2><button type="button" class="icon-button" data-action="close-dialog" aria-label="Close">×</button></div><p class="muted">Rules also apply to subdomains. Allow rules take priority.</p><label>Domain<input name="domain" placeholder="example.com" required maxlength="253" autocomplete="off" spellcheck="false"></label><label>Action<select name="kind"><option value="block">Block domain</option><option value="allow">Allow domain</option></select></label><p class="form-error" id="rule-error" role="alert"></p><div class="dialog-foot"><button type="button" class="button" data-action="close-dialog">Cancel</button><button class="button primary" type="submit">Save rule</button></div></form></dialog>
+</body>
+</html>

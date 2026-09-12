@@ -1,0 +1,20 @@
+name: Bug report
+description: Report an unexpected result in QuietDNS
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include expected behavior and the steps to reproduce it.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Version and device
+      placeholder: QuietDNS version, Pi model, OS version
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Relevant logs or DNS results
+      description: Remove setup keys, passwords and private query history before sharing.
